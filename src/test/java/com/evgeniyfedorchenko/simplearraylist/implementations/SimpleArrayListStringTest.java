@@ -384,7 +384,7 @@ class SimpleArrayListStringTest {
     }
 
     @Test
-    public void binarySearch_test_from_contains() {
+    public void binarySearch_test_and_quickSort_test_from_contains_method() {
         // given
         out.add(STRING_2);
         out.add(STRING_3);
