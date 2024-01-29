@@ -1,6 +1,6 @@
 package com.evgeniyfedorchenko.simplearraylist.implementations;
 
-import com.evgeniyfedorchenko.simplearraylist.interfaces.StringList;
+import com.evgeniyfedorchenko.simplearraylist.interfaces.SimpleList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,10 @@ import static com.evgeniyfedorchenko.simplearraylist.implementations.Constants.*
 import static org.assertj.core.api.Assertions.*;
 
 
-class StringArrayListTest {
+/* Тестовый класс проверяет работу только с типом String */
+class SimpleArrayListStringTest {
 
-    private final StringList out = new StringArrayList();
+    private final SimpleList<String> out = new SimpleArrayList<>();
 
     @BeforeEach
     public void beforeEach() {
@@ -264,7 +265,7 @@ class StringArrayListTest {
     @Test
     public void equals_positive_test() {
         // given
-        StringList actual = new StringArrayList(SEVEN_STRING_1_TEST_ARRAY_LIST);
+        SimpleList<String> actual = new SimpleArrayList<>(SEVEN_STRING_1_TEST_ARRAY_LIST);
         // invoking and assertion
         assertThat(out.equals(actual)).isTrue();
     }
@@ -272,7 +273,7 @@ class StringArrayListTest {
     @Test
     public void equals_positive_test2() {
         // given
-        StringList sameList = out;
+        SimpleList<String> sameList = out;
         // invoking and assertion
         assertThat(out.equals(sameList)).isTrue();
     }
@@ -280,7 +281,7 @@ class StringArrayListTest {
     @Test
     public void equals_negative_test() {
         // given
-        StringList actual = null;
+        SimpleList<String> actual = null;
         // invoking and assertion
         assertThat(out.equals(actual)).isFalse();
     }
@@ -296,7 +297,7 @@ class StringArrayListTest {
     @Test
     public void equals_negative_test3() {
         // given
-        StringList actual = new StringArrayList(SEVEN_STRING_1_TEST_ARRAY_LIST);
+        SimpleList<String> actual = new SimpleArrayList<>(SEVEN_STRING_1_TEST_ARRAY_LIST);
         actual.add(STRING_1);
         // invoking and assertion
         assertThat(out.equals(actual)).isFalse();
@@ -305,7 +306,7 @@ class StringArrayListTest {
     @Test
     public void equals_negative_test4() {
         // given
-        StringList actual = new StringArrayList(SEVEN_STRING_1_TEST_ARRAY_LIST);
+        SimpleList<String> actual = new SimpleArrayList<>(SEVEN_STRING_1_TEST_ARRAY_LIST);
         actual.set(3, STRING_2);
         // invoking and assertions
         assertThat(out.size() == actual.size()).isTrue();
@@ -332,7 +333,7 @@ class StringArrayListTest {
     @Test
     public void clear_test() {
         // given
-        StringList actual = new StringArrayList();
+        SimpleList<String> actual = new SimpleArrayList<>();
         // invoking
         out.clear();
         // assertions
@@ -345,7 +346,7 @@ class StringArrayListTest {
         // given
         String[] array = new String[]{STRING_1, STRING_1, STRING_1, STRING_1, STRING_1, STRING_1, STRING_1};
         // invoking
-        String[] actual = out.toArray();
+        Object[] actual = out.toArray();
         // assertion
         assertThat(actual).isEqualTo(array);
     }
