@@ -30,6 +30,12 @@ class SimpleArrayListStringTest {
     }
 
     @Test
+    public void exception_in_constructor_with_negative_initial_capacity_test() {
+        assertThatThrownBy(() -> new SimpleArrayList<String>(-1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     public void add_without_index_positive_test() {
         // given
         int sizeBeforeAdding = out.size();

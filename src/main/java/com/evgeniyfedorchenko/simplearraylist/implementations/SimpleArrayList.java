@@ -20,12 +20,16 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     public SimpleArrayList(int initialCapacity) {
         size = 0;
-        this.innerArray = new Object[initialCapacity];
+        if (initialCapacity >= 0) {
+            this.innerArray = new Object[initialCapacity];
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public SimpleArrayList(Collection<? extends E> sourceCollection) {
         size = sourceCollection.size();
-        this.innerArray = sourceCollection.toArray();
+        this.innerArray = Arrays.copyOf(sourceCollection.toArray(), sourceCollection.size());
     }
 
     @Override
