@@ -29,7 +29,7 @@ class StringArrayListTest {
     }
 
     @Test
-    public void add_without_index_test() {
+    public void add_without_index_positive_test() {
         // given
         int sizeBeforeAdding = out.size();
         // invoking
@@ -41,11 +41,17 @@ class StringArrayListTest {
     }
 
     @Test
-    public void add_without_index_with_boostSize() {
+    public void add_without_index_with_boostSize_test() {
         // given
         IntStream.range(0, 3).forEach(i -> out.add(STRING_1));
         // invoking and assertions
         assertThatCode(() -> out.add(STRING_1)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void npe_test_in_add_without_index() {
+        assertThatThrownBy(() -> out.add(null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -62,13 +68,13 @@ class StringArrayListTest {
 
     @Test
     public void add_with_index_recursive_call_test() {
+        IntStream.range(0, 3).forEach(i -> out.add(STRING_1));
         assertThatCode(() -> out.add(3, STRING_2))
                 .doesNotThrowAnyException();
-
     }
 
     @Test
-    public void add_with_index_negative_test() {
+    public void add_with_index_negative_test1() {
         // given
         int sizeBeforeAdding = out.size();
 
@@ -84,6 +90,11 @@ class StringArrayListTest {
         assertThat(sizeBeforeAdding).isEqualTo(out.size());
     }
 
+    @Test
+    public void npe_test_in_add_with_index() {
+        assertThatThrownBy(() -> out.add(2, null))
+                .isInstanceOf(NullPointerException.class);
+    }
     @Test
     public void set_positive_test() {
         // given
@@ -110,6 +121,12 @@ class StringArrayListTest {
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
         assertThat(sizeBeforeSetting).isEqualTo(out.size());
+    }
+
+    @Test
+    public void npe_test_in_set() {
+        assertThatThrownBy(() -> out.set(2, null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -153,6 +170,12 @@ class StringArrayListTest {
     }
 
     @Test
+    public void npe_test_in_remove_on_item() {
+        assertThatThrownBy(() -> out.remove(null))
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
     public void indexOf_positive_test() {
         // given
         out.add(STRING_2);
@@ -174,6 +197,12 @@ class StringArrayListTest {
     }
 
     @Test
+    public void npe_test_in_indexOf() {
+        assertThatThrownBy(() -> out.indexOf(null))
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
     public void lastIndexOf_positive_test() {
         // given
         out.add(STRING_2);
@@ -190,6 +219,12 @@ class StringArrayListTest {
         assertThat(out.lastIndexOf(STRING_2)).isEqualTo(-1);
         assertThatCode(() -> out.lastIndexOf(STRING_3))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void npe_test_in_lastIndexOf() {
+        assertThatThrownBy(() -> out.lastIndexOf(null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test

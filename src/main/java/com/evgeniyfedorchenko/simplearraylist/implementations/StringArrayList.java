@@ -29,12 +29,13 @@ public class StringArrayList implements StringList {
 
     @Override
     public String add(String item) {
-        String[] local = innerArray;
-
-        if (size < local.length) {
-            for (int i = 0; i < local.length; i++) {
-                if (local[i] == null) {
-                    local[i] = item;
+        if (item == null) {
+            throw new NullPointerException();
+        }
+        if (size < innerArray.length) {
+            for (int i = 0; i < innerArray.length; i++) {
+                if (innerArray[i] == null) {
+                    innerArray[i] = item;
                     size++;
                     return item;
                 }
@@ -42,7 +43,8 @@ public class StringArrayList implements StringList {
         }
         int oldSize = size;
         boostSize();
-        local[oldSize - 1] = item;
+        innerArray[oldSize] = item;
+        size++;
         return item;
     }
 
@@ -54,14 +56,16 @@ public class StringArrayList implements StringList {
 
     @Override
     public String add(int index, String item) {
+        if (item == null) {
+            throw new NullPointerException();
+        }
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        String[] local = innerArray;
-        if (size < local.length) {
-            String[] turnedEls = Arrays.copyOfRange(local, index - 1, size - 1);
-            local[index] = item;
-            System.arraycopy(turnedEls, 0, local, index + 1, turnedEls.length);
+        if (size < innerArray.length) {
+            String[] turnedEls = Arrays.copyOfRange(innerArray, index - 1, size - 1);
+            innerArray[index] = item;
+            System.arraycopy(turnedEls, 0, innerArray, index + 1, turnedEls.length);
             size++;
             return item;
         }
@@ -71,9 +75,12 @@ public class StringArrayList implements StringList {
 
     @Override
     public String set(int index, String item) {
-        if (index >= size || index < 0) {
+        if (item == null) {
+            throw new NullPointerException();
+        } else if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
+
         String oldElement = innerArray[index];
         innerArray[index] = item;
         return oldElement;
@@ -84,17 +91,18 @@ public class StringArrayList implements StringList {
     public String remove(String item) {
         /* Так как оригинальный ArrayList удаляет только первое вхождение элемента,
            то будем тоже удалять только первое вхождение */
-
+        if (item == null) {
+            throw new NullPointerException();
+        }
         int index = IntStream.range(0, size)
                 .filter(i -> innerArray[i].equals(item))
-                .findAny()
-                .orElseThrow(NoSuchElementException::new);
+                .findAny().orElseThrow(NoSuchElementException::new);
         return remove(index);
     }
 
     @Override
     public String remove(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         String item = innerArray[index];
@@ -110,7 +118,10 @@ public class StringArrayList implements StringList {
 
     @Override
     public int indexOf(String item) {
-        for (int i = 0; i < size - 1; i++) {
+        if (item == null) {
+            throw new NullPointerException();
+        }
+        for (int i = 0; i < size; i++) {
             if (innerArray[i].equals(item)) {
                 return i;
             }
@@ -120,6 +131,9 @@ public class StringArrayList implements StringList {
 
     @Override
     public int lastIndexOf(String item) {
+        if (item == null) {
+            throw new NullPointerException();
+        }
         for (int i = size - 1; i > 0; i--) {
             if (innerArray[i].equals(item)) {
                 return i;
@@ -130,7 +144,7 @@ public class StringArrayList implements StringList {
 
     @Override
     public String get(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         return innerArray[index];
