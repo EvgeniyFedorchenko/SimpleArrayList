@@ -35,7 +35,7 @@ public class StringArrayList implements StringList {
             for (int i = 0; i < local.length; i++) {
                 if (local[i] == null) {
                     local[i] = item;
-                    size += 1;
+                    size++;
                     return item;
                 }
             }
@@ -59,9 +59,10 @@ public class StringArrayList implements StringList {
         }
         String[] local = innerArray;
         if (size < local.length) {
-            String[] turnedEls = Arrays.copyOfRange(local, index, size - 1);
+            String[] turnedEls = Arrays.copyOfRange(local, index - 1, size - 1);
             local[index] = item;
             System.arraycopy(turnedEls, 0, local, index + 1, turnedEls.length);
+            size++;
             return item;
         }
         boostSize();
@@ -84,11 +85,10 @@ public class StringArrayList implements StringList {
         /* Так как оригинальный ArrayList удаляет только первое вхождение элемента,
            то будем тоже удалять только первое вхождение */
 
-        int index = IntStream.range(0, innerArray.length)
+        int index = IntStream.range(0, size)
                 .filter(i -> innerArray[i].equals(item))
-                .findFirst()
+                .findAny()
                 .orElseThrow(NoSuchElementException::new);
-
         return remove(index);
     }
 
@@ -98,8 +98,8 @@ public class StringArrayList implements StringList {
             throw new IndexOutOfBoundsException();
         }
         String item = innerArray[index];
-        String[] shiftedPart = Arrays.copyOfRange(innerArray, index + 1, size - 1);
-        System.arraycopy(shiftedPart, 0, innerArray, index, shiftedPart.length);
+        System.arraycopy(innerArray, index + 1, innerArray, index, size - index);
+        size--;
         return item;
     }
 
@@ -180,6 +180,6 @@ public class StringArrayList implements StringList {
 
     @Override
     public String toString() {
-        return Arrays.toString(innerArray);
+        return Arrays.toString(toArray());
     }
 }
