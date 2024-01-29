@@ -37,7 +37,9 @@ class SimpleArrayListIntegerTest {
         out.add(INTEGER_2);
         // assertions
         assertThat(out.toArray()).isNotEmpty();
-        assertThat(INTEGER_2).isEqualTo(out.get(7));
+        assertThat(INTEGER_2)
+                .isEqualTo(out.get(7))
+                .isIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeAdding + 1);
     }
 
@@ -62,7 +64,9 @@ class SimpleArrayListIntegerTest {
         // invoking
         out.add(3, INTEGER_2);
         // assertions
-        assertThat(INTEGER_2).isEqualTo(out.get(3));
+        assertThat(INTEGER_2)
+                .isEqualTo(out.get(3))
+                .isIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeAdding + 1);
 
     }
@@ -80,11 +84,11 @@ class SimpleArrayListIntegerTest {
         int sizeBeforeAdding = out.size();
 
         // invoking and assertions
-            // Попытка вставки за пределы массива  -> [one, one, one, one, one, one, one, null, null, null]   ВОТ_СЮДА
+        // Попытка вставки за пределы массива  -> [one, one, one, one, one, one, one, null, null, null]   ВОТ_СЮДА
         assertThatThrownBy(() -> out.add(11, INTEGER_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
-            // Попытка вставки на null-поизицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
+        // Попытка вставки на null-поизицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
         assertThatThrownBy(() -> out.add(8, INTEGER_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
@@ -96,6 +100,7 @@ class SimpleArrayListIntegerTest {
         assertThatThrownBy(() -> out.add(2, null))
                 .isInstanceOf(NullPointerException.class);
     }
+
     @Test
     public void set_positive_test() {
         // given
@@ -103,7 +108,9 @@ class SimpleArrayListIntegerTest {
         // invoking
         out.set(4, INTEGER_2);
         // assertions
-        assertThat(INTEGER_2).isEqualTo(out.get(4));
+        assertThat(INTEGER_2)
+                .isEqualTo(out.get(4))
+                .isIn(out);
         assertThat(sizeBeforeSetting).isEqualTo(out.size());
     }
 
@@ -117,7 +124,7 @@ class SimpleArrayListIntegerTest {
         assertThatThrownBy(() -> out.set(11, INTEGER_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
-        // Попытка вставки на null-поизицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
+        // Попытка вставки на null-позицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
         assertThatThrownBy(() -> out.set(8, INTEGER_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
@@ -138,7 +145,9 @@ class SimpleArrayListIntegerTest {
         // invoking
         out.remove(3);
         // assertions
-        assertThat(INTEGER_2).isNotEqualTo(out.get(3));
+        assertThat(INTEGER_2)
+                .isNotEqualTo(out.get(3))
+                .isNotIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeRemoving - 1);
     }
 
@@ -160,7 +169,9 @@ class SimpleArrayListIntegerTest {
         // invoking
         out.remove(INTEGER_1);
         // assertions
-        assertThat(INTEGER_2).isEqualTo(out.get(2));
+        assertThat(INTEGER_2)
+                .isEqualTo(out.get(2))
+                .isNotIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeRemoving - 1);
     }
 

@@ -4,6 +4,7 @@ import com.evgeniyfedorchenko.simplearraylist.interfaces.SimpleList;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
@@ -208,5 +209,23 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     private E getItem(int index) {
         return (E) innerArray[index];
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < size;
+            }
+
+            @Override
+            public E next() {
+                index++;
+                return getItem(index);
+            }
+        };
     }
 }

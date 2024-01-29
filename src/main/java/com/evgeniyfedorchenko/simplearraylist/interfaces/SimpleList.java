@@ -1,6 +1,6 @@
 package com.evgeniyfedorchenko.simplearraylist.interfaces;
 
-public interface SimpleList<E> {
+public interface SimpleList<E> extends Iterable<E>{
 
     /**
      * Добавление элемента.
@@ -87,4 +87,6 @@ public interface SimpleList<E> {
      * из строк в списке и вернуть его.
      */
     Object[] toArray();
+
+    void sortSelection();
 }

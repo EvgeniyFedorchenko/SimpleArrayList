@@ -43,7 +43,9 @@ class SimpleArrayListStringTest {
         out.add(STRING_2);
         // assertions
         assertThat(out.toArray()).isNotEmpty();
-        assertThat(STRING_2).isEqualTo(out.get(7));
+        assertThat(STRING_2)
+                .isEqualTo(out.get(7))
+                .isIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeAdding + 1);
     }
 
@@ -68,7 +70,9 @@ class SimpleArrayListStringTest {
         // invoking
         out.add(3, STRING_2);
         // assertions
-        assertThat(STRING_2).isEqualTo(out.get(3));
+        assertThat(STRING_2)
+                .isEqualTo(out.get(3))
+                .isIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeAdding + 1);
 
     }
@@ -102,6 +106,7 @@ class SimpleArrayListStringTest {
         assertThatThrownBy(() -> out.add(2, null))
                 .isInstanceOf(NullPointerException.class);
     }
+
     @Test
     public void set_positive_test() {
         // given
@@ -109,7 +114,10 @@ class SimpleArrayListStringTest {
         // invoking
         out.set(4, STRING_2);
         // assertions
-        assertThat(STRING_2).isEqualTo(out.get(4));
+        assertThat(STRING_2).isIn(out);
+        assertThat(STRING_2)
+                .isEqualTo(out.get(4))
+                .isIn(out);
         assertThat(sizeBeforeSetting).isEqualTo(out.size());
     }
 
@@ -144,7 +152,9 @@ class SimpleArrayListStringTest {
         // invoking
         out.remove(3);
         // assertions
-        assertThat(STRING_2).isNotEqualTo(out.get(3));
+        assertThat(STRING_2)
+                .isNotEqualTo(out.get(3))
+                .isNotIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeRemoving - 1);
     }
 
@@ -166,7 +176,9 @@ class SimpleArrayListStringTest {
         // invoking
         out.remove(STRING_1);
         // assertions
-        assertThat(STRING_2).isEqualTo(out.get(2));
+        assertThat(STRING_2)
+                .isEqualTo(out.get(2))
+                .isIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeRemoving - 1);
     }
 
