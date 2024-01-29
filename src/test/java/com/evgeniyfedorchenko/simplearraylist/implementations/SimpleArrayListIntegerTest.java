@@ -167,10 +167,10 @@ class SimpleArrayListIntegerTest {
         out.set(3, INTEGER_2);
         int sizeBeforeRemoving = out.size();
         // invoking
-        out.remove(INTEGER_1);
+        out.remove(INTEGER_2);
         // assertions
         assertThat(INTEGER_2)
-                .isEqualTo(out.get(2))
+                .isNotEqualTo(out.get(3))
                 .isNotIn(out);
         assertThat(out.size()).isEqualTo(sizeBeforeRemoving - 1);
     }
@@ -377,7 +377,7 @@ class SimpleArrayListIntegerTest {
     }
 
     @Test
-    public void binarySearch_test_from_contains() {
+    public void binarySearch_test_and_quickSort_test_from_contains_method() {
         // given
         out.add(INTEGER_2);
         out.add(INTEGER_3);

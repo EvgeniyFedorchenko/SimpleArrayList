@@ -88,5 +88,5 @@ public interface SimpleList<E> extends Iterable<E>{
      */
     Object[] toArray();
 
-    void sortSelection();
+    void quickSort();
 }

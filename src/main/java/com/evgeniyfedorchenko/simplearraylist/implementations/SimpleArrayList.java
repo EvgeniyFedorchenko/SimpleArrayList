@@ -33,6 +33,12 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         this.innerArray = Arrays.copyOf(sourceCollection.toArray(), sourceCollection.size());
     }
 
+    private void grow() {
+        Object[] newInnerArray = new Object[Math.round(size * boostRatio)];
+        System.arraycopy(innerArray, 0, newInnerArray, 0, size);
+        innerArray = newInnerArray;
+    }
+
     @Override
     public E add(E item) {
         if (item == null) {
@@ -48,16 +54,10 @@ public class SimpleArrayList<E> implements SimpleList<E> {
             }
         }
         int oldSize = size;
-        boostSize();
+        grow();
         innerArray[oldSize] = item;
         size++;
         return item;
-    }
-
-    private void boostSize() {
-        Object[] newInnerArray = new Object[Math.round(size * boostRatio)];
-        System.arraycopy(innerArray, 0, newInnerArray, 0, size);
-        innerArray = newInnerArray;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
             size++;
             return item;
         }
-        boostSize();
+        grow();
         return add(index, item);
     }
 
@@ -203,7 +203,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
             }
         }
         if (!sorted) {
-            sortSelection();
+            quickSort();
         }
         return binarySearch(item) >= 0;
     }
@@ -228,18 +228,31 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     }
 
     @Override
-    public void sortSelection() {
+    public void quickSort() {
+        quickSort(innerArray, 0, size - 1);
+    }
 
-        for (int i = 0; i < size - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < size; j++) {
-                if (compare(innerArray[j], innerArray[minElementIndex])) {
-                    minElementIndex = j;
+    private void quickSort(Object[] arr, int low, int high) {
+        if (low < high) {
+
+            Object pivot = arr[high];
+            int i = (low - 1);
+
+            for (int j = low; j < high; j++) {
+                if(compare(arr[j], pivot)) {
+                    i++;
+                    Object temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
                 }
             }
-            Object tmp = innerArray[i];
-            innerArray[i] = innerArray[minElementIndex];
-            innerArray[minElementIndex] = tmp;
+            Object temp = arr[i + 1];
+            arr[i + 1] = arr[high];
+            arr[high] = temp;
+            int pi = i + 1;
+
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
         }
     }
 
@@ -249,6 +262,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         String secondString = secondObj.toString();
 
         return firstString.matches("\\d+")
+             //   t             8                             10
                 ? 0 > Long.parseLong(firstString) - Long.parseLong(secondString)
                 : 0 > firstString.compareTo(secondString);
         // w > s
