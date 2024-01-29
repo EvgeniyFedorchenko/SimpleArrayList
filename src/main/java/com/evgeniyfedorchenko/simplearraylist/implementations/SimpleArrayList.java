@@ -1,34 +1,35 @@
 package com.evgeniyfedorchenko.simplearraylist.implementations;
 
-import com.evgeniyfedorchenko.simplearraylist.interfaces.StringList;
+import com.evgeniyfedorchenko.simplearraylist.interfaces.SimpleList;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
-public class StringArrayList implements StringList {
+public class SimpleArrayList<E> implements SimpleList<E> {
 
-    private String[] innerArray;
+    private Object[] innerArray;
     private static final int DEFAULT_CAPACITY = 10;
+    private static final float boostRatio = 1.5F;
     private int size;
 
-    public StringArrayList() {
+    public SimpleArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
-    public StringArrayList(int initialCapacity) {
+    public SimpleArrayList(int initialCapacity) {
         size = 0;
-        this.innerArray = new String[initialCapacity];
+        this.innerArray = new Object[initialCapacity];
     }
 
-    public StringArrayList(Collection<String> sourceCollection) {
+    public SimpleArrayList(Collection<? extends E> sourceCollection) {
         size = sourceCollection.size();
-        this.innerArray = sourceCollection.toArray(new String[0]);
+        this.innerArray = sourceCollection.toArray();
     }
 
     @Override
-    public String add(String item) {
+    public E add(E item) {
         if (item == null) {
             throw new NullPointerException();
         }
@@ -49,13 +50,13 @@ public class StringArrayList implements StringList {
     }
 
     private void boostSize() {
-        String[] newInnerArray = new String[size + size / 2];
+        Object[] newInnerArray = new Object[Math.round(size * boostRatio)];
         System.arraycopy(innerArray, 0, newInnerArray, 0, size);
         innerArray = newInnerArray;
     }
 
     @Override
-    public String add(int index, String item) {
+    public E add(int index, E item) {
         if (item == null) {
             throw new NullPointerException();
         }
@@ -63,7 +64,7 @@ public class StringArrayList implements StringList {
             throw new IndexOutOfBoundsException();
         }
         if (size < innerArray.length) {
-            String[] turnedEls = Arrays.copyOfRange(innerArray, index - 1, size - 1);
+            Object[] turnedEls = Arrays.copyOfRange(innerArray, index - 1, size - 1);
             innerArray[index] = item;
             System.arraycopy(turnedEls, 0, innerArray, index + 1, turnedEls.length);
             size++;
@@ -74,21 +75,20 @@ public class StringArrayList implements StringList {
     }
 
     @Override
-    public String set(int index, String item) {
+    public E set(int index, E item) {
+
         if (item == null) {
             throw new NullPointerException();
         } else if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-
-        String oldElement = innerArray[index];
+        E oldValue = getItem(index);
         innerArray[index] = item;
-        return oldElement;
-
+        return oldValue;
     }
 
     @Override
-    public String remove(String item) {
+    public E remove(E item) {
         /* Так как оригинальный ArrayList удаляет только первое вхождение элемента,
            то будем тоже удалять только первое вхождение */
         if (item == null) {
@@ -101,23 +101,23 @@ public class StringArrayList implements StringList {
     }
 
     @Override
-    public String remove(int index) {
+    public E remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        String item = innerArray[index];
+        E item = getItem(index);
         System.arraycopy(innerArray, index + 1, innerArray, index, size - index);
         size--;
         return item;
     }
 
     @Override
-    public boolean contains(String item) {
+    public boolean contains(E item) {
         return indexOf(item) >= 0;
     }
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(E item) {
         if (item == null) {
             throw new NullPointerException();
         }
@@ -130,7 +130,7 @@ public class StringArrayList implements StringList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(E item) {
         if (item == null) {
             throw new NullPointerException();
         }
@@ -143,23 +143,28 @@ public class StringArrayList implements StringList {
     }
 
     @Override
-    public String get(int index) {
+    public E get(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        return innerArray[index];
+        return getItem(index);
     }
 
     @Override
-    public boolean equals(StringList otherList) {
+    public boolean equals(Object otherList) {
         if (this == otherList) {
             return true;
         }
-        if (otherList == null || getClass() != otherList.getClass() || size != otherList.size()) {
+        if (otherList == null || getClass() != otherList.getClass()) {
+            return false;
+        }
+
+        SimpleArrayList<?> otherList1 = (SimpleArrayList<?>) otherList;
+        if (size != otherList1.size()) {
             return false;
         }
         for (int i = 0; i < size - 1; i++) {
-            if (!innerArray[i].equals(otherList.get(i))) {
+            if (!innerArray[i].equals(otherList1.get(i))) {
                 return false;
             }
         }
@@ -178,7 +183,7 @@ public class StringArrayList implements StringList {
 
     @Override
     public void clear() {
-        for (String element : innerArray) {
+        for (Object element : innerArray) {
             if (element == null) {
                 break;
             }
@@ -188,12 +193,16 @@ public class StringArrayList implements StringList {
     }
 
     @Override
-    public String[] toArray() {
+    public Object[] toArray() {
         return Arrays.copyOf(innerArray, size);
     }
 
     @Override
     public String toString() {
         return Arrays.toString(toArray());
+    }
+
+    private E getItem(int index) {
+        return (E) innerArray[index];
     }
 }
