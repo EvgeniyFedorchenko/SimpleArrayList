@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Constants {
 
-    static final String STRING_1 = "one";
-    static final String STRING_2 = "two";
-    static final String STRING_3 = "tree";
+    static final String STRING_1 = "banana";
+    static final String STRING_2 = "cherry";
+    static final String STRING_3 = "strawberry";
     static final Integer INTEGER_1 = 1;
     static final Integer INTEGER_2 = 2;
     static final Integer INTEGER_3 = 3;

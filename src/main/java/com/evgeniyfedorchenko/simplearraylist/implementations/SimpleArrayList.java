@@ -64,8 +64,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public E add(int index, E item) {
         if (item == null) {
             throw new NullPointerException();
-        }
-        if (index >= size || index < 0) {
+        } else if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         if (size < innerArray.length) {
@@ -114,11 +113,6 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         System.arraycopy(innerArray, index + 1, innerArray, index, size - index);
         size--;
         return item;
-    }
-
-    @Override
-    public boolean contains(E item) {
-        return indexOf(item) >= 0;
     }
 
     @Override
@@ -195,6 +189,69 @@ public class SimpleArrayList<E> implements SimpleList<E> {
             element = null;
         }
         size = 0;
+    }
+
+    @Override
+    public boolean contains(E item) {
+
+        Object[] objects = innerArray;
+        boolean sorted = true;
+        for (int i = 0; i < size - 1; i++) {
+            if (compare(innerArray[i + 1], objects[i])) {
+                sorted = false;
+                break;
+            }
+        }
+        if (!sorted) {
+            sortSelection();
+        }
+        return binarySearch(item) >= 0;
+    }
+
+    private int binarySearch(E item) {
+        int min = 0;
+        int max = size - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+            Object midElement = innerArray[mid];
+
+            if (item.equals(midElement)) {
+                return mid;
+            } else if (compare(item, midElement)) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public void sortSelection() {
+
+        for (int i = 0; i < size - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < size; j++) {
+                if (compare(innerArray[j], innerArray[minElementIndex])) {
+                    minElementIndex = j;
+                }
+            }
+            Object tmp = innerArray[i];
+            innerArray[i] = innerArray[minElementIndex];
+            innerArray[minElementIndex] = tmp;
+        }
+    }
+
+    private boolean compare(Object firstObj, Object secondObj) {
+
+        String firstString = firstObj.toString();
+        String secondString = secondObj.toString();
+
+        return firstString.matches("\\d+")
+                ? 0 > Long.parseLong(firstString) - Long.parseLong(secondString)
+                : 0 > firstString.compareTo(secondString);
+        // w > s
     }
 
     @Override

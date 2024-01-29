@@ -90,11 +90,11 @@ class SimpleArrayListStringTest {
         int sizeBeforeAdding = out.size();
 
         // invoking and assertions
-            // Попытка вставки за пределы массива  -> [one, one, one, one, one, one, one, null, null, null]   ВОТ_СЮДА
+        // Попытка вставки за пределы массива  -> [one, one, one, one, one, one, one, null, null, null]   ВОТ_СЮДА
         assertThatThrownBy(() -> out.add(11, STRING_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
-            // Попытка вставки на null-поизицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
+        // Попытка вставки на null-поизицию (внутри массива) -> [one, one, one, one, one, one, one, null, ВОТ_СЮДА, null]
         assertThatThrownBy(() -> out.add(8, STRING_1))
                 .isInstanceOf(IndexOutOfBoundsException.class);
 
@@ -377,11 +377,25 @@ class SimpleArrayListStringTest {
             actual += STRING_1 + ", ";
         }
         actual = actual.substring(0, actual.length() - 2) + "]";
-
         // invoking
         String expected = out.toString();
-
         // assertion
         assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    public void binarySearch_test_from_contains() {
+        // given
+        out.add(STRING_2);
+        out.add(STRING_3);
+        out.add("watermelon");
+        out.add("apple");
+        out.add("orange");
+        SimpleList<String> expected = new SimpleArrayList<>(
+                List.of("apple", "banana", "banana", "banana", "banana", "banana", "banana", "banana", "cherry", "orange", "strawberry", "watermelon"));
+        // invoking and assertions
+        assertThat(out.contains("watermelon")).isTrue();
+        assertThat(out).isEqualTo(expected);
+        assertThat(out.equals(expected)).isTrue();
     }
 }

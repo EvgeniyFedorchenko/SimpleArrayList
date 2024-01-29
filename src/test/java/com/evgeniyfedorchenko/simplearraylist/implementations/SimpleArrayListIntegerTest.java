@@ -370,11 +370,25 @@ class SimpleArrayListIntegerTest {
             actual += INTEGER_1 + ", ";
         }
         actual = actual.substring(0, actual.length() - 2) + "]";
-
         // invoking
         String expected = out.toString();
-
         // assertion
         assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    public void binarySearch_test_from_contains() {
+        // given
+        out.add(INTEGER_2);
+        out.add(INTEGER_3);
+        out.add(15);
+        out.add(0);
+        out.add(-1);
+        SimpleList<Integer> expected = new SimpleArrayList<>(
+                List.of(-1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 3, 15));
+        // invoking and assertions
+        assertThat(out.contains(-1)).isTrue();
+        assertThat(out).isEqualTo(expected);
+        assertThat(out.equals(expected)).isTrue();
     }
 }
