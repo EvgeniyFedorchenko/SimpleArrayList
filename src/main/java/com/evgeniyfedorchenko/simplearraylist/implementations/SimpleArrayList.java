@@ -41,9 +41,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public E add(E item) {
-        if (item == null) {
-            throw new NullPointerException();
-        }
+        checkNullItem(item);
         if (size < innerArray.length) {
             for (int i = 0; i < innerArray.length; i++) {
                 if (innerArray[i] == null) {
@@ -62,11 +60,8 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public E add(int index, E item) {
-        if (item == null) {
-            throw new NullPointerException();
-        } else if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkNullItem(item);
+        checkInvalidIndex(index);
         if (size < innerArray.length) {
             Object[] turnedEls = Arrays.copyOfRange(innerArray, index - 1, size - 1);
             innerArray[index] = item;
@@ -78,14 +73,23 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return add(index, item);
     }
 
+    private void checkInvalidIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void checkNullItem(E item) {
+        if (item == null) {
+            throw new NullPointerException();
+        }
+    }
+
     @Override
     public E set(int index, E item) {
 
-        if (item == null) {
-            throw new NullPointerException();
-        } else if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkNullItem(item);
+        checkInvalidIndex(index);
         E oldValue = getItem(index);
         innerArray[index] = item;
         return oldValue;
@@ -95,20 +99,17 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public E remove(E item) {
         /* Так как оригинальный ArrayList удаляет только первое вхождение элемента,
            то будем тоже удалять только первое вхождение */
-        if (item == null) {
-            throw new NullPointerException();
-        }
+        checkNullItem(item);
         int index = IntStream.range(0, size)
                 .filter(i -> innerArray[i].equals(item))
-                .findAny().orElseThrow(NoSuchElementException::new);
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
         return remove(index);
     }
 
     @Override
     public E remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkInvalidIndex(index);
         E item = getItem(index);
         System.arraycopy(innerArray, index + 1, innerArray, index, size - index);
         size--;
@@ -117,9 +118,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public int indexOf(E item) {
-        if (item == null) {
-            throw new NullPointerException();
-        }
+        checkNullItem(item);
         for (int i = 0; i < size; i++) {
             if (innerArray[i].equals(item)) {
                 return i;
@@ -130,9 +129,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public int lastIndexOf(E item) {
-        if (item == null) {
-            throw new NullPointerException();
-        }
+        checkNullItem(item);
         for (int i = size - 1; i > 0; i--) {
             if (innerArray[i].equals(item)) {
                 return i;
@@ -143,9 +140,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public E get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkInvalidIndex(index);
         return getItem(index);
     }
 
@@ -262,10 +257,8 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         String secondString = secondObj.toString();
 
         return firstString.matches("\\d+")
-             //   t             8                             10
                 ? 0 > Long.parseLong(firstString) - Long.parseLong(secondString)
                 : 0 > firstString.compareTo(secondString);
-        // w > s
     }
 
     @Override
@@ -278,6 +271,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return Arrays.toString(toArray());
     }
 
+    @SuppressWarnings("unchecked")
     private E getItem(int index) {
         return (E) innerArray[index];
     }
